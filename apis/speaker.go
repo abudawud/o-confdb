@@ -35,13 +35,31 @@ func GetSpeakerApi(c *gin.Context){
 }
 
 func ModSpeakerApi(c *gin.Context){
-  c.String(http.StatusOK, "Mod All Speakers")
+  id := utils.Str2Int(c.Param("id"))
+
+  if id != -1{
+    c.String(http.StatusOK, fmt.Sprintf("Mod Speaker id %d", id))
+  }else{
+    invalidRoute(c);
+  }
 }
 
 func DelSpeakerApi(c *gin.Context){
-  c.String(http.StatusOK, "Del All Speakers")
+  id := utils.Str2Int(c.Param("id"))
+
+  if id != -1{
+    c.String(http.StatusOK, fmt.Sprintf("Del Speaker id %d", id))
+  }else{
+    invalidRoute(c);
+  }
 }
 
 func GetSpeakerConfsApi(c *gin.Context){
-  c.String(http.StatusOK, "Del All Speakers")
+  id := utils.Str2Int(c.Param("id"))
+
+  if id != -1{
+    c.String(http.StatusOK, fmt.Sprintf("All confs Speaker id %d", id))
+  }else{
+    invalidRoute(c);
+  }
 }

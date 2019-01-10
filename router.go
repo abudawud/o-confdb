@@ -26,7 +26,7 @@ func initRouter() *gin.Engine{
 
   router.GET("/speakers/:id/conferences", GetSpeakerConfsApi)
 
-  /*
+
   //origin
   router.GET("/origins")
   router.POST("/origins")
@@ -78,7 +78,6 @@ func initRouter() *gin.Engine{
   router.DELETE("/conferences/:id")
 
   router.GET("/conferences/:id/comments")
-  */
 
   // router.GET("/conferences/:id/ranks");
 
