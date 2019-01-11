@@ -5,7 +5,7 @@ import (
   "fmt"
   "net/http"
   "github.com/gin-gonic/gin"
-  "o-sunnahdb/utils"
+  "o-confdb/utils"
 )
 
 func GetSpeakersApi(c *gin.Context){

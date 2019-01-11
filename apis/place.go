@@ -4,7 +4,7 @@ import (
   "fmt"
   "net/http"
   "github.com/gin-gonic/gin"
-  "o-sunnahdb/utils"
+  "o-confdb/utils"
 )
 
 func GetPlacesApi(c *gin.Context){
