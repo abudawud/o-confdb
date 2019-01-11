@@ -7,5 +7,5 @@ type Conference struct{
   IdPlace     int     `json:"id_pace"`
   Title       string  `json:"title"`
   Description string  `json:"description"`
-  Rank        float   `json:"rank"`
+  Rank        float32  `json:"rank"`
 }

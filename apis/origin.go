@@ -1,18 +1,51 @@
 package apis
 
 import (
+  "log"
   "fmt"
   "net/http"
   "github.com/gin-gonic/gin"
   "o-confdb/utils"
+  . "o-confdb/models"
 )
 
 func GetOriginsApi(c *gin.Context){
-  c.String(http.StatusOK, "All Origins")
+  origins, err := GetOrigins();
+
+  if err != nil{
+    log.Fatalln(err)
+  }
+
+  c.JSON(http.StatusOK, origins)
 }
 
 func AddOriginApi(c *gin.Context){
-  c.String(http.StatusOK, "Add Origins")
+  name := c.Request.FormValue("name")
+  address := c.Request.FormValue("address")
+  description := c.Request.FormValue("description")
+
+  origin := Origin{Name: name, Address: address, Description: description}
+
+  record, err := origin.AddOrigin()
+
+  if err != nil{
+    log.Fatalln(err)
+  }
+
+  var msg string
+  var code int
+  if record > 0 {
+    code = 200
+    msg = "Origin Added"
+  }else{
+    code = 400
+    msg = "Add origin Failed"
+  }
+
+  c.JSON(http.StatusOK, gin.H{
+    "status": code,
+    "messege": msg,
+  })
 }
 
 func ModOriginsApi(c *gin.Context){

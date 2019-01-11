@@ -6,5 +6,5 @@ type Place struct{
   Name          string  `json:"name"`
   Address       string  `json:"address"`
   Description   string  `json:"description"`
-  Rank          float   `json:"rank"`
+  Rank          float32   `json:"rank"`
 }

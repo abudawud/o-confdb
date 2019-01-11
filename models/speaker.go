@@ -5,5 +5,5 @@ type Speaker struct {
 	IdOrigin   int    `json:"id_origin"`
 	FirstName  string `json:"first_name"`
 	LastName   int    `json:"last_name"`
-  Rank       float  `json:"rank"`
+  Rank       float32  `json:"rank"`
 }
