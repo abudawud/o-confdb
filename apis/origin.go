@@ -6,6 +6,7 @@ import (
   "net/http"
   "github.com/gin-gonic/gin"
   "o-confdb/utils"
+  . "o-confdb/helper"
   . "o-confdb/models"
 )
 
@@ -20,6 +21,14 @@ func GetOriginsApi(c *gin.Context){
 }
 
 func AddOriginApi(c *gin.Context){
+  _, vErr := ValidateUser(ROLE_ADMIN, c.Request.FormValue("token"))
+
+  if vErr.Code != 200{
+    c.JSON(vErr.Code, vErr)
+
+    return
+  }
+
   name := c.Request.FormValue("name")
   address := c.Request.FormValue("address")
   description := c.Request.FormValue("description")
