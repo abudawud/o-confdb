@@ -4,6 +4,7 @@ import (
   "log"
   "fmt"
   "net/http"
+  "database/sql"
   "github.com/gin-gonic/gin"
   "o-confdb/utils"
   . "o-confdb/helper"
@@ -11,6 +12,15 @@ import (
 )
 
 func GetOriginsApi(c *gin.Context){
+  var apiErr ApiErr
+
+  token := c.Request.FormValue("token")
+  apiErr = ValidateToken(token, ROLE_GUEST)
+  if(apiErr.Code != 200){
+    c.JSON(apiErr.Code, apiErr)
+    return
+  }
+
   origins, err := GetOrigins();
 
   if err != nil{
@@ -21,13 +31,13 @@ func GetOriginsApi(c *gin.Context){
 }
 
 func AddOriginApi(c *gin.Context){
-  _, vErr := ValidateUser(ROLE_ADMIN, c.Request.FormValue("token"))
-
-  if vErr.Code != 200{
-    c.JSON(vErr.Code, vErr)
-
-    return
-  }
+  // _, vErr := ValidateUser(ROLE_ADMIN, c.Request.FormValue("token"))
+  //
+  // if vErr.Code != 200{
+  //   c.JSON(vErr.Code, vErr)
+  //
+  //   return
+  // }
 
   name := c.Request.FormValue("name")
   address := c.Request.FormValue("address")
@@ -66,13 +76,29 @@ func DelOriginsApi(c *gin.Context){
 }
 
 func GetOriginApi(c *gin.Context){
+  var apiErr ApiErr
+
   id := utils.Str2Int(c.Param("id"))
 
-  if id != -1{
-    c.String(http.StatusOK, fmt.Sprintf("Origin id %d", id))
-  }else{
+  if id == -1{
     invalidRoute(c);
+    return
   }
+
+  token := c.Request.FormValue("token")
+  apiErr = ValidateToken(token, ROLE_GUEST)
+  if(apiErr.Code != 200){
+    c.JSON(apiErr.Code, apiErr)
+    return
+  }
+
+  origin, err := GetOrigin(id);
+
+  if err != sql.ErrNoRows && err != nil{
+    log.Fatalln(err)
+  }
+
+  c.JSON(http.StatusOK, origin)
 }
 
 func ModOriginApi(c *gin.Context){

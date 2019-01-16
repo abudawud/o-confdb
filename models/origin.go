@@ -27,6 +27,13 @@ func GetOrigins() (origins []Origin, err error){
 	return
 }
 
+func GetOrigin(id int) (origin Origin, err error){
+  err = SqlDB.QueryRow("SELECT * FROM ms_speaker_origin WHERE id = ?", id).
+    Scan(&origin.Id, &origin.Name, &origin.Address, &origin.Description)
+
+  return
+}
+
 func (o *Origin) AddOrigin() (record int64, err error){
   record = 0
   rs, err := SqlDB.Exec("INSERT INTO ms_speaker_origin(name, address, description) VALUES (?, ?, ?)", o.Name, o.Address, o.Description)

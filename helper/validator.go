@@ -1,7 +1,8 @@
 package helper
 
 import(
-  "o-confdb/utils"
+  "fmt"
+  "crypto/md5"
   "database/sql"
   . "o-confdb/models"
 )
@@ -9,16 +10,47 @@ import(
 const ROLE_ADMIN = 1
 const ROLE_GUEST = 2
 
-func ValidateUser(role int, token string) (data User, vErr ApiErr){
-  if token == ""{
+func ValidateUser(username string, password string) (user User, vErr ApiErr){
+  if username == "" || password == ""{
+    vErr.Code = 400
+    vErr.Messege = "Permission Denied!, Username/Password not provided"
+
+    return
+  }
+
+  pass := []byte(password)
+  hash := fmt.Sprintf("%x", md5.Sum(pass))
+  user, err := GetUserByAuth(username, hash)
+
+  if err == sql.ErrNoRows{
+    vErr.Code = 400
+    vErr.Messege = "Permission Denied, Invalid Username/Password!"
+
+    return
+  }else if err != nil{
+    vErr.Code = 500
+    vErr.Messege = "Internal Server Error, @validateUser"
+    fmt.Println(err)
+
+    return
+  }
+
+  vErr.Code = 200;
+
+  return
+}
+
+func ValidateToken(rtoken string, role int) (vErr ApiErr){
+  vErr.Code = 200
+
+  if rtoken == ""{
     vErr.Code = 400
     vErr.Messege = "Permission Denied, Token not provided!"
 
     return
   }
 
-  var idtoken int = utils.Str2Int(token)
-  user, err := GetUser(idtoken)
+  token, err := GetAuth(rtoken)
 
   if err == sql.ErrNoRows{
     vErr.Code = 400
@@ -27,26 +59,24 @@ func ValidateUser(role int, token string) (data User, vErr ApiErr){
     return
   }else if err != nil{
     vErr.Code = 500
-    vErr.Messege = "Internal Server Error, @getUser"
+    vErr.Messege = "Internal Server Error, @ValidateToken"
 
     return
   }
 
-  switch role {
+  switch(role){
     case ROLE_ADMIN:{
-      if user.Role != ROLE_ADMIN{
+      if token.Role != ROLE_ADMIN{
         vErr.Code = 400
-        vErr.Messege = "Permission Denied, Role Admin Required!"
-        return
+        vErr.Messege = "Permission Denied, Admin Role Required!"
       }
       break
     }
 
     case ROLE_GUEST:{
-      if user.Role != ROLE_ADMIN || user.Role != ROLE_GUEST{
+      if (token.Role & (ROLE_GUEST|ROLE_ADMIN)) == 0{
         vErr.Code = 400
-        vErr.Messege = "Permission Denied, At least Role Guest Required"
-        return
+        vErr.Messege = "Permission Denied, At least Guest Role Required"
       }
       break
     }
@@ -54,11 +84,8 @@ func ValidateUser(role int, token string) (data User, vErr ApiErr){
     default:{
       vErr.Code = 500
       vErr.Messege = "Internal Server Error!, Role Not Found!"
-      return
     }
   }
 
-  vErr.Code = 200
-  data = user;
   return
 }

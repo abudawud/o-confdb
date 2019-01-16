@@ -13,6 +13,9 @@ func testLog(){
 func initRouter() *gin.Engine{
   router := gin.Default()
 
+  router.POST("/users", AddUserApi)
+  router.POST("/auth", AddTokenApi)
+
   //speaker
   router.GET("/speakers", GetSpeakersApi)
   router.POST("/speakers", AddSpeakerApi)
