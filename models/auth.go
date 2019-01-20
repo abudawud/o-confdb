@@ -8,9 +8,11 @@ import (
 type Token struct{
   Id          int     `json:"id"`
   Token       string  `json:"token"`
-  Role        int  `json:"role"`
+  Role        int     `json:"role"`
   Issued      string  `json:"issued"`
-  Expired     string   `json:"expired"`
+  Expired     string  `json:"expired"`
+  User        User    `json:"user"`
+  Status      ApiMsg  `json:"status"`
 }
 
 func GetAuth(rtoken string) (token Token, err error){

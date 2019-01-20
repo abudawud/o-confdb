@@ -12,7 +12,7 @@ import (
 )
 
 func GetPlacesApi(c *gin.Context){
-  var apiErr ApiErr
+  var apiErr ApiMsg
 
   token := c.Request.FormValue("token")
   apiErr = ValidateToken(token, ROLE_GUEST)
@@ -43,7 +43,7 @@ func DelPlacesApi(c *gin.Context){
 }
 
 func GetPlaceApi(c *gin.Context){
-  var apiErr ApiErr
+  var apiErr ApiMsg
 
   id := utils.Str2Int(c.Param("id"))
 

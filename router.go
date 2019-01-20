@@ -13,6 +13,7 @@ func testLog(){
 func initRouter() *gin.Engine{
   router := gin.Default()
 
+  router.GET("/users/:id", GetUserApi)
   router.POST("/users", AddUserApi)
   router.POST("/auth", AddTokenApi)
 

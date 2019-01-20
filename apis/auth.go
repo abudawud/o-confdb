@@ -16,6 +16,8 @@ func AddTokenApi(c *gin.Context){
     return
   }
 
-  var token = Token{Token: user.Password}
+  mErr.Code = 200
+  mErr.Message = "OK"
+  var token = Token{Token: user.Password, User: user, Status: mErr}
   c.JSON(200, token)
 }

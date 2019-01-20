@@ -10,7 +10,7 @@ import (
 )
 
 func GetConfsApi(c *gin.Context){
-  var apiErr ApiErr
+  var apiErr ApiMsg
 
   token := c.Request.FormValue("token")
   apiErr = ValidateToken(token, ROLE_GUEST)
@@ -23,7 +23,7 @@ func GetConfsApi(c *gin.Context){
 
   if(err != nil){
     apiErr.Code = 500
-    apiErr.Messege = "Internal Server Error, @GetConfApi!"
+    apiErr.Message = "Internal Server Error, @GetConfApi!"
     c.JSON(apiErr.Code, apiErr)
   }
 

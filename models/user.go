@@ -8,18 +8,16 @@ import (
 type User struct{
   Id          int     `json:"id"`
   Username    string  `json:"username"`
-  Password    string  `json:"password"`
+  Password    string  `json:"-"`
   Role        int     `json:"role"`
   Email       string  `json:"email"`
   FirstName   string  `json:"first_name"`
   LastName    string  `json:"last_name"`
 }
 
-func GetUserById(uid int) (user User, err error){
+func GetUserById(uid int64) (user User, err error){
   err = SqlDB.QueryRow("SELECT * FROM ms_user WHERE id = ?", uid).
-    Scan(&user.Id, &user.Username, &user.Password, &user.Role, &user.FirstName, &user.LastName)
-
-  user.Password = "*"
+    Scan(&user.Id, &user.Username, &user.Password, &user.Role, &user.Email, &user.FirstName, &user.LastName)
   return
 }
 
@@ -32,7 +30,7 @@ func GetUserByAuth(username string, password string) (user User, err error){
   return
 }
 
-func (u *User) AddUser() (err error){
+func (u *User) AddUser() (index int64, err error){
   rs, err := SqlDB.Exec("INSERT INTO ms_user(username, password, role, email, first_name, last_name) VALUES (?, ?, ?, ?, ?, ?)",
     u.Username, u.Password, u.Role, u.Email, u.FirstName, u.LastName)
 
@@ -40,6 +38,6 @@ func (u *User) AddUser() (err error){
     return
   }
 
-  rs.LastInsertId()
+  index, err = rs.LastInsertId()
   return
 }

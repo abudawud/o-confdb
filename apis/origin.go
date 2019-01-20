@@ -12,7 +12,7 @@ import (
 )
 
 func GetOriginsApi(c *gin.Context){
-  var apiErr ApiErr
+  var apiErr ApiMsg
 
   token := c.Request.FormValue("token")
   apiErr = ValidateToken(token, ROLE_GUEST)
@@ -76,7 +76,7 @@ func DelOriginsApi(c *gin.Context){
 }
 
 func GetOriginApi(c *gin.Context){
-  var apiErr ApiErr
+  var apiErr ApiMsg
 
   id := utils.Str2Int(c.Param("id"))
 

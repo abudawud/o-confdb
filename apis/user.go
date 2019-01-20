@@ -1,13 +1,23 @@
 package apis
 
 import (
+  "fmt"
+  "crypto/md5"
   "github.com/gin-gonic/gin"
   "o-confdb/utils"
   . "o-confdb/models"
 )
 
+func GetUserApi(c *gin.Context){
+  ids := c.Param("id")
+  id := utils.Str2Int(ids)
+
+  user, _ := GetUserById(int64(id))
+  c.JSON(200, user)
+}
+
 func AddUserApi(c *gin.Context){
-  var aerr ApiErr
+  var aerr ApiMsg
 
   username := c.Request.FormValue("username")
   password := c.Request.FormValue("password")
@@ -18,7 +28,7 @@ func AddUserApi(c *gin.Context){
 
   if username == "" || password == "" || firstName == ""{
       aerr.Code = 400
-      aerr.Messege = "Permission Denied!, Some Field Required!"
+      aerr.Message = "Permission Denied!, Some Field Required!"
 
       c.JSON(aerr.Code, aerr)
       return
@@ -28,11 +38,13 @@ func AddUserApi(c *gin.Context){
   role := utils.Str2Int(trole)
   if role == -1 {
     aerr.Code = 400
-    aerr.Messege = "Permission Denied!, Invalid Role!"
+    aerr.Message = "Permission Denied!, Invalid Role!"
 
     c.JSON(aerr.Code, aerr)
     return
   }
+
+  password = fmt.Sprintf("%x", md5.Sum([]byte(password)))
 
   user := User{
     Username: username,
@@ -42,15 +54,16 @@ func AddUserApi(c *gin.Context){
     FirstName: firstName,
     LastName: lastName }
 
-  err := user.AddUser()
+  index, err := user.AddUser()
 
   if err != nil{
-    aerr.Code = 500
-    aerr.Messege = "Internal Server Error!, @AddUser"
+    fmt.Println(err)
+    aerr.Code = 400
+    aerr.Message = "Permission Denied, Username already exist"
+    c.JSON(aerr.Code, aerr)
   }else{
-    aerr.Code = 200
-    aerr.Messege = "OK"
+    var user User
+    user, err = GetUserById(index)
+    c.JSON(200, user)
   }
-
-  c.JSON(aerr.Code, aerr)
 }
