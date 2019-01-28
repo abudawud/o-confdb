@@ -4,6 +4,9 @@ OpenConferenceDB adalah sebuah RESTfull API web service yang menyediakan daftar 
 # Entity-Relationship Diagram
 <img src="https://github.com/abudawud/o-confdb/blob/master/doc/erd.png">
 
+# Backend Deploy SS
+<img src="https://github.com/abudawud/o-confdb/blob/master/doc/deploy.png">
+
 # Lisensi
 Projek ini memiliki Lisensi FreeSoftware, setiap orang dapat berkontribusi atau mengembangkannya sendiri dan menyebarluaskannya dengan tetap mematuhi Lisensi GNU GPL v3.0
 
