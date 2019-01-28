@@ -91,9 +91,25 @@ func DelPlaceApi(c *gin.Context){
 func GetPlaceConfsApi(c *gin.Context){
   id := utils.Str2Int(c.Param("id"))
 
-  if id != -1{
-    c.String(http.StatusOK, fmt.Sprintf("All confs Place id %d", id))
-  }else{
+  if id == -1{
     invalidRoute(c);
+    return;
   }
+
+  var apiErr ApiMsg
+
+  token := c.Request.FormValue("token")
+  apiErr = ValidateToken(token, ROLE_GUEST)
+  if(apiErr.Code != 200){
+    c.JSON(apiErr.Code, apiErr)
+    return
+  }
+
+  confs, err := GetConfsByPlace(id);
+
+  if err != nil{
+    log.Fatalln(err)
+  }
+
+  c.JSON(http.StatusOK, confs)
 }
