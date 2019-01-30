@@ -7,6 +7,9 @@ OpenConferenceDB adalah sebuah RESTfull API web service yang menyediakan daftar 
 # Backend Deploy SS
 <img src="https://github.com/abudawud/o-confdb/blob/master/doc/deploy.png">
 
+# Test RESTful (Postman)
+<img src="https://github.com/abudawud/o-confdb/blob/master/doc/test_restfull.png">
+
 # Lisensi
 Projek ini memiliki Lisensi FreeSoftware, setiap orang dapat berkontribusi atau mengembangkannya sendiri dan menyebarluaskannya dengan tetap mematuhi Lisensi GNU GPL v3.0
 
